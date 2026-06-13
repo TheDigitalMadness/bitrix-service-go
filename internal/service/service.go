@@ -3,21 +3,19 @@ package service
 import (
 	"context"
 
-	"github.com/TheDigitalMadness/bitrix-service-go/internal/client/bitrix"
+	bitrixModels "github.com/TheDigitalMadness/bitrix-service-go/internal/domain/bitrix"
 )
 
-type Service interface {
-	AddUser(ctx context.Context, email string) error
-	AddProvider(ctx context.Context, email string) error
-	FirstBuy(ctx context.Context, id int) error
-	RepeatBuy(ctx context.Context, id int) error
+type Client interface {
+	AddDeal(ctx context.Context, fields bitrixModels.AddDealFields) error
+	UpdateDeal(ctx context.Context, id int, fields bitrixModels.UpdateDealFields) error
 }
 
 type service struct {
-	client bitrix.Client
+	client Client
 }
 
-func New(client bitrix.Client) Service {
+func New(client Client) *service {
 	return &service{client: client}
 }
 
