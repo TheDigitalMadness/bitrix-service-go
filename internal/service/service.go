@@ -12,16 +12,17 @@ type Client interface {
 }
 
 type service struct {
-	client Client
+	client     Client
+	categoryID int
 }
 
-func New(client Client) *service {
-	return &service{client: client}
+func New(client Client, categoryID int) *service {
+	return &service{client: client, categoryID: categoryID}
 }
 
 func (s *service) AddUser(ctx context.Context, email string) (int, error) {
 	ID, err := s.client.AddDeal(ctx, &bitrixModels.AddDealFields{
-		CategoryID: 2,
+		CategoryID: s.categoryID,
 		StageID:    bitrixModels.REGISTRATION,
 		Title:      email,
 	})
@@ -34,7 +35,7 @@ func (s *service) AddUser(ctx context.Context, email string) (int, error) {
 
 func (s *service) AddProvider(ctx context.Context, email string) (int, error) {
 	ID, err := s.client.AddDeal(ctx, &bitrixModels.AddDealFields{
-		CategoryID: 2,
+		CategoryID: s.categoryID,
 		StageID:    bitrixModels.PROVIDER,
 		Title:      email,
 	})
@@ -47,14 +48,14 @@ func (s *service) AddProvider(ctx context.Context, email string) (int, error) {
 
 func (s *service) FirstBuy(ctx context.Context, id int) error {
 	return s.client.UpdateDeal(ctx, id, &bitrixModels.UpdateDealFields{
-		CategoryID: 2,
+		CategoryID: s.categoryID,
 		StageID:    bitrixModels.FIRST_BUY,
 	})
 }
 
 func (s *service) RepeatBuy(ctx context.Context, id int) error {
 	return s.client.UpdateDeal(ctx, id, &bitrixModels.UpdateDealFields{
-		CategoryID: 2,
+		CategoryID: s.categoryID,
 		StageID:    bitrixModels.REPEAT_BUY,
 	})
 }

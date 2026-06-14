@@ -18,7 +18,7 @@ func mainWithDi() {
 			config.New,
 			httpController.NewRouter,
 			httpController.New,
-			service.New,
+			newService,
 			newBitrixClient,
 		),
 		fx.Invoke(
@@ -33,6 +33,10 @@ func mainWithDi() {
 
 func newBitrixClient(cfg *config.Config) service.Client {
 	return bitrix.New(cfg.BitrixBaseUrl, cfg.BitrixClientHttpTimeoutInSeconds)
+}
+
+func newService(cfg *config.Config, client service.Client) httpController.Service {
+	return service.New(client, cfg.BitrixCategoryID)
 }
 
 func registerRunners(cfg *config.Config, lc fx.Lifecycle, engine *gin.Engine) {

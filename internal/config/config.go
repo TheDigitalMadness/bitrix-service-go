@@ -10,6 +10,7 @@ type Config struct {
 	HttpPort                         int
 	BitrixBaseUrl                    string
 	BitrixClientHttpTimeoutInSeconds int
+	BitrixCategoryID                 int
 }
 
 // https://b24-5ji7no.bitrix24.ru
@@ -26,5 +27,6 @@ func New() *Config {
 			}
 			return int(val)
 		}(),
+		BitrixCategoryID: 2,
 	}
 }
