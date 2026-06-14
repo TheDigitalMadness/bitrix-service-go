@@ -1,7 +1,10 @@
 package bitrix
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -22,10 +25,73 @@ func New(baseUrl string, httpTimeoutInSeconds int) *client {
 	}
 }
 
-func (c *client) AddDeal(ctx context.Context, fields bitrixModels.AddDealFields) error {
-	return nil
+func (c *client) AddDeal(ctx context.Context, fields *bitrixModels.AddDealFields) (int, error) {
+	url := c.baseUrl + "/crm.deal.add"
+
+	reqBody := map[string]any{
+		"fields": map[string]any{
+			"CATEGORY_ID": fields.CategoryID,
+			"STAGE_ID":    fields.StageID,
+			"TITLE":       fields.Title,
+		},
+	}
+	bodyBytes, err := json.Marshal(reqBody)
+	if err != nil {
+		return 0, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return 0, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return 0, fmt.Errorf("Bad status: %s", resp.Status)
+	}
+
+	var ID int
+	if err := json.NewDecoder(resp.Body).Decode(&ID); err != nil {
+		return 0, err
+	}
+
+	return ID, nil
 }
 
-func (c *client) UpdateDeal(ctx context.Context, id int, fields bitrixModels.UpdateDealFields) error {
+func (c *client) UpdateDeal(ctx context.Context, id int, fields *bitrixModels.UpdateDealFields) error {
+	url := c.baseUrl + "/crm.deal.update"
+
+	reqBody := map[string]any{
+		"fields": map[string]any{
+			"CATEGORY_ID": fields.CategoryID,
+			"STAGE_ID":    fields.StageID,
+		},
+		"id": id,
+	}
+	bodyBytes, err := json.Marshal(reqBody)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
 	return nil
 }
