@@ -13,11 +13,11 @@ type client struct {
 	http    *http.Client
 }
 
-func New(baseUrl string) *client {
+func New(baseUrl string, httpTimeoutInSeconds int) *client {
 	return &client{
 		baseUrl: baseUrl,
 		http: &http.Client{
-			Timeout: 6 * time.Second,
+			Timeout: time.Duration(httpTimeoutInSeconds) * time.Second,
 		},
 	}
 }
