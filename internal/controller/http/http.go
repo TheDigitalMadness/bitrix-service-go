@@ -5,8 +5,8 @@ import (
 )
 
 type Service interface {
-	AddUser(ctx context.Context, email string) error
-	AddProvider(ctx context.Context, email string) error
+	AddUser(ctx context.Context, email string) (int, error)
+	AddProvider(ctx context.Context, email string) (int, error)
 	FirstBuy(ctx context.Context, id int) error
 	RepeatBuy(ctx context.Context, id int) error
 }

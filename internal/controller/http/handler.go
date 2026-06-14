@@ -12,13 +12,19 @@ func (h *handler) AddUser(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.service.AddUser(ctx.Request.Context(), dto.Email); err != nil {
+	ID, err := h.service.AddUser(ctx.Request.Context(), dto.Email)
+	if err != nil {
 		ctx.JSON(
 			500,
 			gin.H{"error": "Internal Server Error"},
 		)
 		return
 	}
+
+	ctx.JSON(
+		201,
+		gin.H{"id": ID},
+	)
 }
 
 func (h *handler) AddProvider(ctx *gin.Context) {
@@ -31,13 +37,19 @@ func (h *handler) AddProvider(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.service.AddProvider(ctx.Request.Context(), dto.Email); err != nil {
+	ID, err := h.service.AddProvider(ctx.Request.Context(), dto.Email)
+	if err != nil {
 		ctx.JSON(
 			500,
 			gin.H{"error": "Internal Server Error"},
 		)
 		return
 	}
+
+	ctx.JSON(
+		201,
+		gin.H{"id": ID},
+	)
 }
 
 func (h *handler) FirstBuy(ctx *gin.Context) {
@@ -57,6 +69,8 @@ func (h *handler) FirstBuy(ctx *gin.Context) {
 		)
 		return
 	}
+
+	ctx.Status(200)
 }
 
 func (h *handler) RepeatBuy(ctx *gin.Context) {
@@ -76,4 +90,6 @@ func (h *handler) RepeatBuy(ctx *gin.Context) {
 		)
 		return
 	}
+
+	ctx.Status(200)
 }
