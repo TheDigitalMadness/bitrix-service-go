@@ -15,7 +15,7 @@ import (
 func mainWithDi() {
 	var module = fx.Options(
 		fx.Provide(
-			config.New,
+			config.MustReturnConfig,
 			httpController.NewRouter,
 			httpController.New,
 			newService,

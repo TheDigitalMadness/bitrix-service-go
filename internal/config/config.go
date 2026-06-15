@@ -2,37 +2,40 @@ package config
 
 import (
 	"fmt"
-	"os"
-	"strconv"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
-	HttpPort                         int
-	BitrixBaseUrl                    string
-	BitrixClientHttpTimeoutInSeconds int
-	BitrixCategoryID                 int
+	HttpPort int `env:"PORT" env-default:"4000"`
+
+	BitrixURL           string `env:"BITRIX_URL" env-required:"true"`
+	BitrixUserID        string `env:"BITRIX_USER_ID" env-required:"true"`
+	BitrixWebhookSecret string `env:"BITRIX_WEBHOOK_SECRET" env-required:"true"`
+
+	BitrixClientHttpTimeoutInSeconds int `env:"BITRIX_CLIENT_HTTP_TIMEOUT" env-default:"6"`
+
+	BitrixCategoryID int `env:"BITRIX_CATEGORY_ID" env-default:"2"`
+
+	BitrixBaseUrl string `env:"-"`
 }
 
 // https://b24-5ji7no.bitrix24.ru
 // 1
 // TopSecret
-func New() *Config {
-	return &Config{
-		HttpPort: func() int {
-			val, err := strconv.ParseInt(os.Getenv("PORT"), 10, 64)
-			if err != nil || val <= 0 {
-				val = 4000
-			}
-			return int(val)
-		}(),
-		BitrixBaseUrl: fmt.Sprintf("%s/rest/%s/%s", os.Getenv("BITRIX_URL"), os.Getenv("BITRIX_USER_ID"), os.Getenv("BITRIX_WEBHOOK_SECRET")),
-		BitrixClientHttpTimeoutInSeconds: func() int {
-			val, err := strconv.ParseInt(os.Getenv("BITRIX_CLIENT_HTTP_TIMEOUT"), 10, 64)
-			if err != nil || val <= 0 {
-				val = 6
-			}
-			return int(val)
-		}(),
-		BitrixCategoryID: 2,
+func MustReturnConfig() *Config {
+	var cfg Config
+
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		panic(err)
 	}
+
+	cfg.BitrixBaseUrl = fmt.Sprintf(
+		"%s/rest/%s/%s",
+		cfg.BitrixBaseUrl,
+		cfg.BitrixUserID,
+		cfg.BitrixWebhookSecret,
+	)
+
+	return &cfg
 }

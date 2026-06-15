@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	cfg := config.New()
+	cfg := config.MustReturnConfig()
 	bitrixClient := bitrix.New(cfg.BitrixBaseUrl, cfg.BitrixClientHttpTimeoutInSeconds)
 	service := service.New(bitrixClient, cfg.BitrixCategoryID)
 	handler := httpController.New(service)
