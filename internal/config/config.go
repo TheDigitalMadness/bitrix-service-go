@@ -20,9 +20,7 @@ type Config struct {
 	BitrixBaseUrl string `env:"-"`
 }
 
-// https://b24-5ji7no.bitrix24.ru
-// 1
-// TopSecret
+// Read environment from .env file and build and return config
 func MustReturnConfig() *Config {
 	var cfg Config
 

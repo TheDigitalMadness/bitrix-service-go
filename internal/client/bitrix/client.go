@@ -25,6 +25,7 @@ func New(baseUrl string, httpTimeoutInSeconds int) *client {
 	}
 }
 
+// Adds a deal to any stage of pre-configured category
 func (c *client) AddDeal(ctx context.Context, fields *bitrixModels.AddDealFields) (int, error) {
 	url := c.baseUrl + "/crm.deal.add"
 
@@ -65,6 +66,7 @@ func (c *client) AddDeal(ctx context.Context, fields *bitrixModels.AddDealFields
 	return ID, nil
 }
 
+// Changes a deal stage in category by id
 func (c *client) UpdateDeal(ctx context.Context, id int, fields *bitrixModels.UpdateDealFields) error {
 	url := c.baseUrl + "/crm.deal.update"
 

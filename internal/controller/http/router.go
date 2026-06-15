@@ -9,6 +9,7 @@ type HttpHandler interface {
 	RepeatBuy(ctx *gin.Context)
 }
 
+// Creates and returns a new router
 func NewRouter(handler HttpHandler) *gin.Engine {
 	r := gin.Default()
 

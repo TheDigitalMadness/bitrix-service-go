@@ -20,6 +20,7 @@ func New(client Client, categoryID int) *service {
 	return &service{client: client, categoryID: categoryID}
 }
 
+// Adds a deal with user to registration stage
 func (s *service) AddUser(ctx context.Context, email string) (int, error) {
 	ID, err := s.client.AddDeal(ctx, &bitrixModels.AddDealFields{
 		CategoryID: s.categoryID,
@@ -33,6 +34,7 @@ func (s *service) AddUser(ctx context.Context, email string) (int, error) {
 	return ID, err
 }
 
+// Adds a deal with user to provider stage
 func (s *service) AddProvider(ctx context.Context, email string) (int, error) {
 	ID, err := s.client.AddDeal(ctx, &bitrixModels.AddDealFields{
 		CategoryID: s.categoryID,
@@ -46,6 +48,7 @@ func (s *service) AddProvider(ctx context.Context, email string) (int, error) {
 	return ID, err
 }
 
+// Moves a deal to first-buy stage
 func (s *service) FirstBuy(ctx context.Context, id int) error {
 	return s.client.UpdateDeal(ctx, id, &bitrixModels.UpdateDealFields{
 		CategoryID: s.categoryID,
@@ -53,6 +56,7 @@ func (s *service) FirstBuy(ctx context.Context, id int) error {
 	})
 }
 
+// Moves a deal to repeat-buy stage
 func (s *service) RepeatBuy(ctx context.Context, id int) error {
 	return s.client.UpdateDeal(ctx, id, &bitrixModels.UpdateDealFields{
 		CategoryID: s.categoryID,

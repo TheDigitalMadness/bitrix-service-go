@@ -9,6 +9,7 @@ import (
 	"github.com/TheDigitalMadness/bitrix-service-go/internal/service"
 )
 
+// Initializes and starts the server
 func main() {
 	cfg := config.MustReturnConfig()
 	bitrixClient := bitrix.New(cfg.BitrixBaseUrl, cfg.BitrixClientHttpTimeoutInSeconds)

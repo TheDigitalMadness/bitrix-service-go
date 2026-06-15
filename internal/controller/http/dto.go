@@ -2,6 +2,7 @@ package httpController
 
 import "github.com/gin-gonic/gin"
 
+// Conveniently parses request body to dto by type
 func ParseBodyDto[dtoType any](c *gin.Context) (dtoType, error) {
 	var dto dtoType
 	if err := c.ShouldBindBodyWithJSON(&dto); err != nil {
